@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <!-- Левая часть с изображением и основной информацией -->
+    <div class="col-md-8">
+      <div class="card shadow-sm mb-4">
+        {% if recipe.image %}
+          <img src="{{ recipe.image.url }}" class="card-img-top" alt="Изображение рецепта" style="max-height: 400px; object-fit: cover;">
+        {% else %}
+          <img src="{% static 'default_recipe_image.jpg' %}" class="card-img-top" alt="Изображение по умолчанию" style="max-height: 400px; object-fit: cover;">
+        {% endif %}
+        <div class="card-body">
+          <h1 class="card-title">{{ recipe.title }}</h1> <!-- Заголовок блюда -->
+          <div class="d-flex align-items-center mb-3">
+            {% if recipe.author.profile.image %}
+              <img src="{{ recipe.author.profile.image.url }}" alt="Автор" class="rounded-circle me-2" style="width: 50px; height: 50px;">
+            {% else %}
+              <img src="{% static 'default_profile_image.jpg' %}" alt="Автор" class="rounded-circle me-2" style="width: 50px; height: 50px;">
+            {% endif %}
+            <div>
+              <p class="mb-0"><strong>Автор рецепта:</strong> {{ recipe.author.username }}</p>
+              <small class="text-muted">{{ recipe.created_at|date:"d M Y" }}</small>
+            </div>
+          </div>
+          <p class="card-text text-muted">{{ recipe.description }}</p>
+        </div>
+
+        <!-- Лайки и дизлайки -->
+        <div class="card-footer d-flex justify-content-between">
+          <form method="post" action="{% url 'like_recipe' recipe.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-success">
+              <i class="bi bi-hand-thumbs-up"></i> {{ likes }} Лайк
+            </button>
+          </form>
+          <form method="post" action="{% url 'dislike_recipe' recipe.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger">
+              <i class="bi bi-hand-thumbs-down"></i> {{ dislikes }} Дизлайк
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h3 class="text-success">Ингредиенты</h3>
+          <ul class="list-group">
+            <li class="list-group-item">{{ recipe.ingredients }}</li>
+          </ul>
+
+          <h3 class="text-success mt-4">Инструкции</h3>
+          <p>{{ recipe.instructions }}</p>
+
+          <p><strong>Время приготовления:</strong> {{ recipe.cooking_time }} минут</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Правая часть с комментариями -->
+    <div class="col-md-4">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <h3 class="text-success">Комментарии</h3>
+          <ul class="list-group">
+            {% for comment in comments %}
+              <li class="list-group-item">
+                <strong>{{ comment.user.username }}</strong> сказал(а): <br>
+                {{ comment.text }} <br>
+                <small class="text-muted">{{ comment.created_at|date:"d M Y, H:i" }}</small>
+              </li>
+            {% empty %}
+              <p class="text-muted">Комментариев пока нет.</p>
+            {% endfor %}
+          </ul>
+
+          <!-- Оставление комментария только для авторизованных пользователей -->
+          {% if user.is_authenticated %}
+            <h4 class="mt-4">Оставить комментарий</h4>
+            <form method="post">
+              {% csrf_token %}
+              {{ comment_form.as_p }}
+              <button type="submit" class="btn btn-success mt-2">Добавить комментарий</button>
+            </form>
+          {% else %}
+            <p>Вы должны <a href="{% url 'login' %}" class="text-decoration-none">войти</a>, чтобы оставлять комментарии.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Кнопка возврата к списку рецептов -->
+  <a href="{% url 'recipe_list' %}" class="btn btn-secondary mt-3">
+    <i class="bi bi-arrow-left"></i> Вернуться к списку рецептов
+  </a>
+</div>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-4 text-center">Добавить новый рецепт</h1>
+
+  <!-- Отображение ошибок формы -->
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <p>Пожалуйста, исправьте ошибки ниже:</p>
+      <ul>
+        {% for field in form %}
+          {% for error in field.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <!-- Форма для добавления рецепта -->
+  <form method="post" enctype="multipart/form-data" class="needs-validation mx-auto" style="max-width: 600px;" novalidate>
+    {% csrf_token %}
+
+    <!-- Поле для названия рецепта с иконкой -->
+    <div class="mb-3">
+      <label for="{{ form.title.id_for_label }}" class="form-label">Название рецепта:</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-pencil-square"></i></span>
+        {{ form.title|add_class:"form-control" }}
+      </div>
+      {% if form.title.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.title.errors }}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Поле для описания рецепта -->
+    <div class="mb-3">
+      <label for="{{ form.description.id_for_label }}" class="form-label">Описание рецепта:</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+        {{ form.description|add_class:"form-control" }}
+      </div>
+      {% if form.description.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.description.errors }}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Поле для ингредиентов -->
+    <div class="mb-3">
+      <label for="{{ form.ingredients.id_for_label }}" class="form-label">Ингредиенты:</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-basket-fill"></i></span>
+        {{ form.ingredients|add_class:"form-control" }}
+      </div>
+      {% if form.ingredients.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.ingredients.errors }}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Поле для инструкций -->
+    <div class="mb-3">
+      <label for="{{ form.instructions.id_for_label }}" class="form-label">Инструкции по приготовлению:</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-list-task"></i></span>
+        {{ form.instructions|add_class:"form-control" }}
+      </div>
+      {% if form.instructions.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.instructions.errors }}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Поле для времени приготовления -->
+    <div class="mb-3">
+      <label for="{{ form.cooking_time.id_for_label }}" class="form-label">Время приготовления (в минутах):</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
+        {{ form.cooking_time|add_class:"form-control" }}
+      </div>
+      {% if form.cooking_time.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.cooking_time.errors }}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Поле для выбора категории -->
+    <div class="mb-3">
+      <label for="{{ form.category.id_for_label }}" class="form-label">Категория:</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-tag-fill"></i></span>
+        {{ form.category|add_class:"form-select" }}
+      </div>
+      {% if form.category.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.category.errors }}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Поле для загрузки изображения -->
+    <div class="mb-3">
+      <label for="{{ form.image.id_for_label }}" class="form-label">Изображение рецепта:</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-camera-fill"></i></span>
+        {{ form.image|add_class:"form-control" }}
+      </div>
+      {% if form.image.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.image.errors }}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Кнопки добавления и отмены -->
+    <div class="d-grid gap-2">
+      <button type="submit" class="btn btn-success">Добавить рецепт</button>
+      <a href="{% url 'recipe_list' %}" class="btn btn-secondary">Назад к списку рецептов</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Личный кабинет</h2>
+
+  <!-- Информация о пользователе -->
+  <div class="row mb-4">
+    <div class="col-md-4 text-center">
+      <!-- Показ аватара пользователя -->
+      {% if user.profile.image %}
+        <img src="{{ user.profile.image.url }}" alt="Аватар" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px;">
+      {% else %}
+        <img src="{% static 'default_profile_image.jpg' %}" alt="Аватар" class="img-thumbnail rounded-circle" style="width: 150px; height: 150px;">
+      {% endif %}
+    </div>
+    <div class="col-md-8">
+      <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <a href="{% url 'profile_settings' %}" class="btn btn-success">Настройки профиля</a> <!-- Зеленая кнопка -->
+    </div>
+  </div>
+
+  <!-- Список рецептов пользователя -->
+  <h3 class="mb-3">{% if user.is_superuser %}Все рецепты{% else %}Ваши рецепты{% endif %}</h3>
+  <div class="row">
+    {% for recipe in user_recipes %}
+      <div class="col-md-6 mb-3">
+        <div class="card h-100">
+          <div class="card-body d-flex align-items-center">
+            <!-- Изображение рецепта -->
+            {% if recipe.image %}
+              <img src="{{ recipe.image.url }}" alt="Фото рецепта" class="img-thumbnail me-3" style="width: 100px; height: auto;">
+            {% endif %}
+            <div>
+              <a href="{% url 'recipe_detail' recipe.pk %}" class="h5 text-decoration-none">{{ recipe.title }}</a>
+            </div>
+          </div>
+          <div class="card-footer d-flex justify-content-between">
+            <a href="{% url 'recipe_edit' recipe.pk %}" class="btn btn-sm btn-outline-success">
+              <i class="bi bi-pencil-square"></i> Редактировать
+            </a> <!-- Зеленая кнопка -->
+            <form method="POST" action="{% url 'recipe_delete' recipe.pk %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Вы уверены, что хотите удалить этот рецепт?')">
+                <i class="bi bi-trash"></i> Удалить
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="alert alert-info">{% if user.is_superuser %}Нет доступных рецептов.{% else %}Вы не загрузили ни одного рецепта.{% endif %}</p>
+    {% endfor %}
+  </div>
+
+  <!-- Управление пользователями для суперпользователя -->
+  {% if user.is_superuser %}
+    <h3 class="mb-3">Управление пользователями</h3>
+    <ul class="list-group">
+      {% for u in users %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <!-- Показ аватара пользователя -->
+            {% if u.profile.image %}
+              <img src="{{ u.profile.image.url }}" alt="{{ u.username }}" class="img-thumbnail rounded-circle me-3" style="width: 50px; height: 50px;">
+            {% else %}
+              <img src="{% static 'default_profile_image.jpg' %}" alt="{{ u.username }}" class="img-thumbnail rounded-circle me-3" style="width: 50px; height: 50px;">
+            {% endif %}
+            <span>{{ u.username }} - Статус: {{ u.is_active|yesno:"Активен,Заблокирован" }}</span>
+          </div>
+          <!-- Кнопка блокировки/разблокировки пользователя для суперпользователя -->
+          <form method="POST" action="{% url 'block_user' u.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm {% if u.is_active %}btn-warning{% else %}btn-success{% endif %}">
+              {% if u.is_active %} Заблокировать {% else %} Разблокировать {% endif %}
+            </button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endblock %}

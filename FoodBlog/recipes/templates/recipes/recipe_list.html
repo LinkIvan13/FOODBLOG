@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5"> <!-- Добавляем отступ сверху из-за фиксированного меню -->
+    <h2 class="mb-4 text-center">Рецепты</h2>
+
+    <!-- Форма поиска рецептов -->
+    <form method="GET" action="{% url 'recipe_list' %}" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Поиск рецептов..." value="{{ request.GET.search }}">
+            <button class="btn btn-outline-success" type="submit">
+                <i class="bi bi-search"></i> Поиск
+            </button>
+        </div>
+    </form>
+
+    <!-- Список рецептов -->
+    <div class="row">
+        {% for recipe in recipes %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if recipe.image %}
+                        <img src="{{ recipe.image.url }}" class="card-img-top" alt="Фото рецепта" style="max-height: 200px; object-fit: cover;">
+                    {% else %}
+                        <img src="{% static 'default_recipe_image.jpg' %}" class="card-img-top" alt="Изображение по умолчанию" style="max-height: 200px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: #8B4513;">
+                            <a href="{% url 'recipe_detail' recipe.pk %}" class="text-decoration-none">{{ recipe.title }}</a>
+                        </h5>
+                        <p class="card-text text-muted">Автор: {{ recipe.author.username }}</p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span>
+                                <i class="bi bi-hand-thumbs-up text-success"></i> {{ recipe.total_likes }} <!-- Количество лайков -->
+                                <i class="bi bi-hand-thumbs-down text-danger"></i> {{ recipe.total_dislikes }} <!-- Количество дизлайков -->
+                            </span>
+                            <span>
+                                <i class="bi bi-chat-left-text"></i> {{ recipe.comments.count }} комментариев
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{% url 'recipe_detail' recipe.pk %}" class="btn btn-success">
+                            <i class="bi bi-eye"></i> Посмотреть рецепт
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="alert alert-warning">Рецептов не найдено.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

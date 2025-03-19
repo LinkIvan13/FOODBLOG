@@ -1,0 +1,230 @@
+/* Общие стили */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
+     padding-top: 60px; /* Добавляем отступ сверху для основного контента */
+
+}
+
+/* Стили для кнопок */
+.btn-custom {
+    background-color: #28a745; /* Зеленый цвет */
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: #218838; /* Более темный зеленый для hover */
+}
+
+/* Стили для общих кнопок */
+.btn-success, .btn-outline-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.btn-success:hover, .btn-outline-success:hover {
+    background-color: #218838;
+    color: white;
+}
+
+.btn-outline-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+    transition: background-color 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Карточки рецептов */
+.recipe-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Изображения в карточке рецепта */
+.card-img-top {
+    max-height: 300px; /* Уменьшаем максимальную высоту изображения */
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+}
+
+/* Стили для заголовка блюда */
+.card-title {
+    color: #8B4513; /* Коричневый цвет */
+    font-weight: bold;
+}
+
+/* Навигация */
+.nav-link {
+    color: #28a745; /* Зеленый цвет для ссылок */
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #218838; /* Более темный зеленый для hover */
+}
+
+/* Подвал */
+footer {
+    margin-top: 50px;
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* Стили для карточек и кнопок */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-outline-success {
+    border-color: #28a745;
+    color: #28a745;
+    transition: background-color 0.3s ease;
+}
+
+.btn-outline-success:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-outline-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+    transition: background-color 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Стили для комментариев */
+.list-group-item {
+    border: none;
+    background-color: #f8f9fa;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.list-group-item strong {
+    font-weight: bold;
+}
+
+.list-group-item small {
+    display: block;
+    margin-top: 5px;
+    color: #6c757d;
+}
+
+.list-group-item button {
+    margin-top: 10px;
+    padding: 5px 10px;
+}
+
+/* Форма комментария */
+textarea {
+    resize: vertical;
+}
+
+textarea:focus {
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+    border-color: #28a745;
+}
+
+/* Стили для блока с комментариями */
+.card-body h3, .card-body h2 {
+    font-size: 1.5rem;
+    color: #28a745;
+}
+
+.card-body ul.list-group {
+    padding: 0;
+    margin-bottom: 15px;
+}
+
+/* Стили для контейнера с рецептом */
+.container {
+    margin-top: 30px;
+}
+
+/* Дополнительные стили для выравнивания таблиц и элементов */
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.col-md-8, .col-md-4 {
+    padding: 10px;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+/* Уменьшаем размер изображения в блоке рецепта */
+.card-img-top {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+/* Дополнительные стили для блока с комментариями */
+.card-body {
+    padding: 20px;
+}
+
+/* Стили для выравнивания комментариев */
+.comment-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Стили для выравнивания кнопок в комментариях */
+.comment-section button {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+/* Дополнительные стили для улучшенного разделения секций */
+hr {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px solid #e5e5e5;
+}
+
+.text-brown {
+    color: #8B4513; /* Коричневый цвет для названий */
+}

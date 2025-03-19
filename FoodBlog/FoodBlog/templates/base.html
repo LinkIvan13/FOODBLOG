@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Blog</title>
+    <!-- Загрузка static тега -->
+    {% load static %}
+    <!-- Подключаем Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Подключаем Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Подключаем кастомный CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- Подключаем иконки Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'recipe_list' %}">Food Blog</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'recipe_list' %}">Главная</a>
+                        </li>
+                        <!-- Добавляем выпадающее меню для категорий рецептов -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Категории
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                                <li><a class="dropdown-item" href="{% url 'recipe_list' %}">Все рецепты</a></li>
+                                {% for category in categories %}
+                                    <li><a class="dropdown-item" href="?category={{ category.id }}">{{ category.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'recipe_add' %}">Добавить рецепт</a>
+                        </li>
+                    </ul>
+
+                    <!-- Кнопки Профиль и Выйти перемещены вправо -->
+                    <ul class="navbar-nav ms-auto">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'profile' %}">Профиль</a>
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" action="{% url 'logout' %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button class="btn btn-outline-danger" type="submit">Выйти</button>
+                                </form>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'signup' %}">Регистрация</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Контент каждой страницы -->
+    <div class="container mt-3">
+        <div class="row">
+            {% block content %}
+            <!-- Отображение рецептов в виде карточек -->
+            <div class="row">
+                {% for recipe in recipes %}
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100">
+                            {% if recipe.image %}
+                                <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <img src="/static/default_recipe_image.jpg" class="card-img-top" alt="Default Recipe Image" style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title text-brown">{{ recipe.title }}</h5> <!-- Коричневый цвет названия -->
+                                <p class="card-text">{{ recipe.description|truncatewords:20 }}</p>
+                                <a href="{% url 'recipe_detail' recipe.pk %}" class="btn btn-success">Подробнее</a>
+                            </div>
+                            <div class="card-footer text-center">
+                                <!-- Лайки, дизлайки и количество комментариев -->
+                                <a href="{% url 'like_recipe' recipe.pk %}" class="btn btn-outline-success me-2">
+                                    <i class="bi bi-hand-thumbs-up"></i> {{ recipe.total_likes_count }}
+                                </a>
+                                <a href="{% url 'dislike_recipe' recipe.pk %}" class="btn btn-outline-danger me-2">
+                                    <i class="bi bi-hand-thumbs-down"></i> {{ recipe.total_dislikes_count }}
+                                </a>
+                                <span class="text-muted"><i class="bi bi-chat-left-text"></i> {{ recipe.comments.count }}</span> <!-- Количество комментариев -->
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endblock %}
+        </div>
+    </div>
+
+    <footer class="text-center mt-5 bg-success text-white py-3"> <!-- Зеленая полоска футера -->
+        <p>© 2024 Food Blog</p>
+    </footer>
+
+    <!-- Подключаем Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
