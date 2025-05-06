@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
+from decouple import config
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -140,5 +141,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGOUT_REDIRECT_URL = '/'
 
-TELEGRAM_TOKEN = '7732571464:AAHaoKFqgK4mFKiv6DXBoSj-rlkhPiWH2BE'
-TELEGRAM_CHAT_ID = '914060911'
+TELEGRAM_TOKEN = config('TELEGRAM_TOKEN')
+TELEGRAM_CHAT_ID = config('TELEGRAM_CHAT_ID')
